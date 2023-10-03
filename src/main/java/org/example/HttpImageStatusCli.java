@@ -1,16 +1,10 @@
 package org.example;
-
+import java.io.IOException;
 import java.util.Scanner;
 
 public class HttpImageStatusCli {
-    public static void main(String[] args) {
-        HttpImageStatusCli httpCli = new HttpImageStatusCli();
-        httpCli.askStatus();
-    }
 
-    public void askStatus(String imageUrl) {
-        Scanner scanner = new Scanner(System.in);
-
+    public void askStatus(Scanner scanner) {
         System.out.print("Enter HTTP status code: ");
         String input = scanner.nextLine();
 
@@ -18,10 +12,12 @@ public class HttpImageStatusCli {
             int statusCode = Integer.parseInt(input);
 
             if (statusCode >= 100 && statusCode < 600) {
-
+                HttpStatusChecker checker = new HttpStatusChecker();
+                String imageUrl = checker.getStatusImage(statusCode);
 
                 if (imageUrl != null) {
-                    HttpStatusImageDownloader.downloadStatusImage(imageUrl);
+                    HttpStatusImageDownloader downloader = new HttpStatusImageDownloader();
+                    downloader.downloadStatusImage(statusCode);
                     System.out.println("Image downloaded successfully.");
                 } else {
                     System.out.println("There is no image for HTTP status " + statusCode);
@@ -31,8 +27,9 @@ public class HttpImageStatusCli {
             }
         } catch (NumberFormatException e) {
             System.out.println("Please enter a valid number.");
-        } finally {
-            scanner.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
+
