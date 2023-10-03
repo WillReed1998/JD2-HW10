@@ -19,7 +19,7 @@ public class HttpStatusChecker {
             int responseCode = connection.getResponseCode();
 
             if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
-                throw new RuntimeException("Image not found for status code " + code);
+                return null;
             }
 
             return imageUrl;
@@ -28,4 +28,3 @@ public class HttpStatusChecker {
         }
     }
 }
-
